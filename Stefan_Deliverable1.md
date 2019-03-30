@@ -83,8 +83,8 @@ kickstarters2 <- kickstarters %>% mutate(proportion_raised = (usd_pledged_real/u
 
 Added a proportion\_raised variable to the data set to display the proportion of the total goal that was met. Added a true\_state variable to split projects into success/failure based on the amount of money raised and whether or not the goal was met. For this variable, TRUE is equivalent to successful, and FALSE is equivalent to FAILED.
 
-Exploratory Data Analysis: Single Variable
-------------------------------------------
+Exploratory Data Analysis: Variation of Single Variables
+--------------------------------------------------------
 
 ``` r
 kickstarters2 %>% ggplot(aes(x = state)) + geom_bar()
@@ -96,4 +96,57 @@ kickstarters2 %>% ggplot(aes(x = state)) + geom_bar()
 kickstarters2 %>% ggplot(aes(x = true_state)) + geom_bar()
 ```
 
-![](Stefan_Deliverable1_files/figure-markdown_github/Success-2.png) These two bar graphs show that overall, the highest number of the projects end up as failed, and the majority of projects do not meet their eventual goals.
+![](Stefan_Deliverable1_files/figure-markdown_github/Success-2.png)
+
+These two bar graphs show that overall, the highest number of the projects end up as failed, and the majority of projects do not meet their eventual goals.
+
+``` r
+kickstarters2 %>% filter(proportion_raised <= 1) %>% ggplot(aes(x = proportion_raised)) + geom_histogram(binwidth = 0.2)
+```
+
+![](Stefan_Deliverable1_files/figure-markdown_github/Proportion-1.png)
+
+This histogram of the proportions raised for projects that did not meet their goals shows that the majority of projects that do not meet their goals don't come close, only reaching less than 20% of their goal.
+
+``` r
+pledgedtable <- kickstarters2 %>% group_by(main_category) %>% summarise(Mean_Raised = mean(usd_pledged_real), Standard_Deviation = sd(usd_pledged_real)) %>% arrange(Mean_Raised)
+pledgedtable
+```
+
+    ## # A tibble: 15 x 3
+    ##    main_category Mean_Raised Standard_Deviation
+    ##    <fct>               <dbl>              <dbl>
+    ##  1 Crafts              1633.              8087.
+    ##  2 Journalism          2616.             10451.
+    ##  3 Art                 3221.             21855.
+    ##  4 Publishing          3350.             14817.
+    ##  5 Dance               3453.              5769.
+    ##  6 Photography         3572.             19273.
+    ##  7 Music               3858.             13015.
+    ##  8 Theater             4006.             10850.
+    ##  9 Food                5114.             31220.
+    ## 10 Fashion             5712.             29930.
+    ## 11 Film & Video        6158.             41399.
+    ## 12 Comics              6610.             24409.
+    ## 13 Games              21042.            168530.
+    ## 14 Technology         21151.            126726.
+    ## 15 Design             24417.            214977.
+
+This data table shows the mean and standard deviation of funds raised in USD in each of the main category groups. From this table we can see that many of the categories have very large standard deviations, indicating a large amount of variation in the amount raised. Additionally, we can see that Crafts projects raise the least amount of money on average, while design projects raise the most on average.
+
+Exploratory Data Analysis: Covariation of Multiple Variables
+------------------------------------------------------------
+
+``` r
+kickstarters2 %>% ggplot(aes(x = true_state, fill = main_category)) + geom_bar()
+```
+
+![](Stefan_Deliverable1_files/figure-markdown_github/goal%20and%20pledged-1.png)
+
+``` r
+kickstarters2 %>% ggplot(aes(fill = true_state, x = main_category)) + geom_bar(position = "dodge") + theme(axis.text.x = element_text(angle = 45))
+```
+
+![](Stefan_Deliverable1_files/figure-markdown_github/goal%20and%20pledged-2.png)
+
+From this graph we can see that kickstarters in the Comics, Dance, and Theater categories have more successes than failures. This is an interesting observation, because overall kickstarters tend to fail more often than they succeed as our previous graphs have shown.

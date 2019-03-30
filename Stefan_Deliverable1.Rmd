@@ -65,7 +65,7 @@ kickstarters2 <- kickstarters %>% mutate(proportion_raised = (usd_pledged_real/u
 Added a proportion_raised variable to the data set to display the proportion of the total goal that was met. Added a true_state variable to split projects into success/failure based on the amount of money raised and whether or not the goal was met. For this variable, TRUE is equivalent to successful, and FALSE is equivalent to FAILED.
 
 
-## Exploratory Data Analysis: Single Variable
+## Exploratory Data Analysis: Variation of Single Variables
 
 ```{r Success}
 kickstarters2 %>% ggplot(aes(x = state)) + geom_bar()
@@ -80,7 +80,18 @@ kickstarters2 %>% filter(proportion_raised <= 1) %>% ggplot(aes(x = proportion_r
 
 This histogram of the proportions raised for projects that did not meet their goals shows that the majority of projects that do not meet their goals don't come close, only reaching less than 20% of their goal.
 
+```{r pledged}
+pledgedtable <- kickstarters2 %>% group_by(main_category) %>% summarise(Mean_Raised = mean(usd_pledged_real), Standard_Deviation = sd(usd_pledged_real)) %>% arrange(Mean_Raised)
+pledgedtable
+```
 
+This data table shows the mean and standard deviation of funds raised in USD in each of the main category groups. From this table we can see that many of the categories have very large standard deviations, indicating a large amount of variation in the amount raised. Additionally, we can see that Crafts projects raise the least amount of money on average, while design projects raise the most on average.
 
+## Exploratory Data Analysis: Covariation of Multiple Variables
 
+```{r goal and pledged}
+kickstarters2 %>% ggplot(aes(x = true_state, fill = main_category)) + geom_bar()
+kickstarters2 %>% ggplot(aes(fill = true_state, x = main_category)) + geom_bar(position = "dodge") + theme(axis.text.x = element_text(angle = 45))
+```
 
+From this graph we can see that kickstarters in the Comics, Dance, and Theater categories have more successes than failures. This is an interesting observation, because overall kickstarters tend to fail more often than they succeed as our previous graphs have shown.
