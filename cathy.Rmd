@@ -1,0 +1,45 @@
+---
+title: "Untitled"
+output: github_document
+---
+---
+title: "Deliverable1"
+output: github_document
+---
+
+
+
+## Data Import & Cleaning
+
+```{r problems}
+library(tidyverse)
+project <- read_csv("ks-projects-201801.csv")
+problems(project) 
+
+
+```
+
+## Interested variables
+
+
+```{r variation}
+#0-100
+group1 <- project %>% filter(usd_goal_real <= 100) %>% select(usd_goal_real) %>% summarize(count = n())
+group1_mean <- summarise(mean = mean(), na.rm = TRUE)
+#100-1000
+group2 <- project %>% filter(usd_goal_real > 100 & usd_goal_real <= 1000)
+#1000-10000
+group3 <- project %>% filter(usd_goal_real > 1000 & usd_goal_real <= 10000)
+#10000+
+group4 <- project %>% filter(usd_goal_real > 10000)
+
+rows <- project %>% summarise(count = n())
+
+
+
+```
+
+
+
+
+
