@@ -13,6 +13,7 @@ output: github_document
 
 ```{r problems}
 library(tidyverse)
+library(tibble)
 project <- read_csv("ks-projects-201801.csv")
 problems(project) 
 
@@ -24,16 +25,58 @@ problems(project)
 
 ```{r variation}
 #0-100
-group1 <- project %>% filter(usd_goal_real <= 100) %>% select(usd_goal_real) %>% summarize(count = n())
-group1_mean <- summarise(mean = mean(), na.rm = TRUE)
-#100-1000
-group2 <- project %>% filter(usd_goal_real > 100 & usd_goal_real <= 1000)
-#1000-10000
-group3 <- project %>% filter(usd_goal_real > 1000 & usd_goal_real <= 10000)
-#10000+
-group4 <- project %>% filter(usd_goal_real > 10000)
+group1 <- project %>% filter(usd_goal_real <= 100) %>% select(usd_goal_real)
+group1_mean <-sum(group1$usd_goal_real) / 6082
+group1_prop <- 6082/378661
 
-rows <- project %>% summarise(count = n())
+#100-1000
+group2 <- project %>% filter(usd_goal_real > 100 & usd_goal_real <= 1000) %>% select(usd_goal_real)
+group2_mean <- sum(group2$usd_goal_real) / 54811
+group2_prop <- 54811/378661
+
+#1000-10000
+group3 <- project %>% filter(usd_goal_real > 1000 & usd_goal_real <= 10000) %>% select(usd_goal_real)
+group3_mean <- sum(group3$usd_goal_real) / 193351
+group3_prop <- 193351/378661
+
+#10000+
+group4 <- project %>% filter(usd_goal_real > 10000) %>% select(usd_goal_real)
+group4_mean <- sum(group4$usd_goal_real) / 124417
+group4_prop <- 124417/378661
+
+usd_goals_data <- data_frame(
+  name = c("$0-100", "$101-1000", "$1001-10000", "$10000+"),
+  total_avg = c(group1_mean, group2_mean, group3_mean, group4_mean),
+  proportion_of_data = c(group1_prop, group2_prop, group3_prop, group4_prop)
+)
+usd_goals_data
+
+#0-100
+group1 <- project %>% filter(usd_pledged_real <= 100) %>% select(usd_pledged_real)
+group1_pmean <-sum(group1$usd_pledged_real) / 124486
+group1_pprop <- 124486/378661
+
+#100-1000
+group2 <- project %>% filter(usd_pledged_real > 100 & usd_pledged_real <= 1000) %>% select(usd_pledged_real)
+group2_pmean <- sum(group2$usd_pledged_real) / 85108
+group2_pprop <- 85108/378661
+
+#1000-10000
+group3 <- project %>% filter(usd_pledged_real > 1000 & usd_pledged_real <= 10000) %>% select(usd_pledged_real)
+group3_pmean <- sum(group3$usd_pledged_real) / 117758
+group3_pprop <- 117758/378661
+
+#10000+
+group4 <- project %>% filter(usd_pledged_real > 10000) %>% select(usd_pledged_real)
+group4_pmean <- sum(group4$usd_pledged_real) / 51309
+group4_pprop <- 51309/378661
+
+usd_pledged_data <- data_frame(
+  name = c("$0-100", "$101-1000", "$1001-10000", "$10000+"),
+  total_pledged_avg = c(group1_pmean, group2_pmean, group3_pmean, group4_pmean),
+  proportion_of_data = c(group1_pprop, group2_pprop, group3_pprop, group4_pprop)
+)
+usd_pledged_data
 
 
 
