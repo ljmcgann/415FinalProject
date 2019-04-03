@@ -36,7 +36,7 @@ KSDataFiltered
 You can also embed plots, for example:
 
 ```{r plotting, echo=FALSE}
-ggplot(KSDataFiltered) + geom_point(aes(x = main_category, y = state_count, color = state)) + theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1))
+ggplot(KSDataFiltered) + geom_bar(aes(x = main_category, y = state_count, fill = state), stat = "identity", position=position_dodge()) + theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1))
 
 ```
 
