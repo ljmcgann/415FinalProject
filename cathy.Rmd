@@ -51,7 +51,7 @@ usd_goals_data <- data_frame(
 )
 usd_goals_data
 
-
+ggplot(usd_goals_data, (aes(x= name,y = proportion_of_data))) + geom_point(aes(color = name))
 
 ```
 In usd_goals_data, we are observing the variability of the goals set by each kickstarter project in US dollars. We see that over 80% of the projects were set to be over 1,000 USD. The majority at 51% was between 1,000 and 10,000 USD. Furthermore, we found the average to see generally within each grouping, what the average was. For example, between 100-1,000 USD, we see that the average was ~$634, which is very near the midway point of the grouping, so this could suggest that there is not much of a certain bracket but more evenly spread out of number of projects that set their goals between 100-1000.
@@ -91,3 +91,15 @@ ggplot(usd_pledged_data, (aes(x= name,y = proportion_of_data))) + geom_point(aes
 
 In the usd_pledged, we see that the majority of the projects had between 0 and 100 USD pledged, next between 1000 to 10,000 and then 100-1000 at 22.5% and only about 14% pledged over 10,0000. Furthermore, we can see the averages for USD actually pledged must have some clustering especially in the group 0-100 because the average is 18USD, suggesting a large number of the projects got around $0 pledged.
 
+
+```{r covariation between month and state}
+
+month<- project %>% mutate(monthlaunched = str_sub(launched, start = 6, end = 7)) %>% mutate(true_state = (usd_pledged_real / usd_goal_real)>1)
+  
+month_prop <- month %>% mutate(true_state = (usd_pledged_real / usd_goal_real)>1)%>% group_by(monthlaunched) %>% count(true_state)
+month_prop2 <- month %>% group_by(monthlaunched) %>% count(monthlaunched)
+month_prop3 <- merge(x = month_prop, y = month_prop2, by = "monthlaunched", all = TRUE)
+month_prop3 <- month_prop3 %>% mutate(proportion_success = n.x/n.y) %>% filter(true_state == TRUE)
+month_prop3 %>% ggplot(aes(x=as.integer(monthlaunched),y=proportion_success)) + geom_line() + geom_point() + labs (x = 'Month', y = 'Proportion Successful', title = 'Proportion of Projects Successful based on Month Launched' )
+
+```
