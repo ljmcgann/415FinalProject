@@ -1,0 +1,27 @@
+---
+title: "Deliverable1"
+output: github_document
+---
+
+
+
+## Count of Projects Launched by Year
+
+```{r cars}
+library(tidyverse)
+project <- read_csv("ks-projects-201801.csv")
+
+# Launched
+library(stringr)
+?str_sub
+project %>% mutate(yearlaunched = str_sub(launched, start = 1, end = 4)) %>% ggplot() + geom_bar(aes(x = yearlaunched)) + labs (x = 'Year', y = 'Projects Launched', title = 'Count of Projects Launched by Year' )
+
+#There were 7 projects launched in the year 1970. We opt to exclude these outliers in our analysis, as we feel they do not adequately represent the modern kickstarter climate. 
+```
+
+## Count of Projects per Country
+
+
+```{r country}
+project %>% ggplot() + geom_bar(aes(x = country)) + labs (x = 'Country', y = 'Projects Launched', title = 'Count of Projects by Country' )
+```

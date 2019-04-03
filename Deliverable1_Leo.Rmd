@@ -1,0 +1,43 @@
+---
+title: "Deliverable1"
+output: github_document
+---
+
+
+
+## R Markdown
+
+
+```{r dataimport}
+library(tidyverse)
+KSData2018 <- read_csv("kickstarter-projects/ks-projects-201801.csv")#, col_types = cols(state = col_factor()))
+problems(KSData2018)
+
+KSData2018
+```
+
+
+```{r transformations}
+KSData2018 <- KSData2018 %>% mutate(prop_raised_goal = usd_pledged_real/usd_goal_real)
+
+
+
+#Filtering by prop < 2 only eliminates ~20,000 entries of the 378,654 entries
+KSDataFiltered <- KSData2018 %>% filter(prop_raised_goal < 2 & (state == "failed" | state == "successful")) %>% group_by(main_category, state) %>% summarize(state_count = n()) %>%
+  ungroup() %>% group_by(main_category) %>% mutate(total = sum(state_count)) %>% mutate(succ_prop = ifelse(state == "successful", state_count/total, 1-state_count/total)) %>% ungroup()
+
+
+KSDataFiltered
+#KSData2018
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r plotting, echo=FALSE}
+ggplot(KSDataFiltered) + geom_point(aes(x = main_category, y = state_count, color = state)) + theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1))
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
