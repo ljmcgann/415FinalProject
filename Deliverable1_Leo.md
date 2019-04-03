@@ -100,13 +100,26 @@ KSDataFiltered
 
 ``` r
 #KSData2018
+
+
+
+## Including Plots
+
+#You can also embed plots, for example:
+
+ggplot(KSDataFiltered) + geom_bar(aes(x = main_category, y = state_count, fill = state), stat = "identity", position=position_dodge()) + theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1)) + labs(title = "Main Category vs. Successes & Failure Count by Category", x = "Category", y = "Count")
 ```
 
-Including Plots
----------------
+![](Deliverable1_Leo_files/figure-markdown_github/transformations-1.png)
 
-You can also embed plots, for example:
+We chose ot filter out data points with a proportion of raised to goal greater than 2 as there were many outliers with a proportion reaching as high as 10^8. Upon inspection we found these data points were from Kickstarters where the project owner set the goal to $1 and proceeded to raise millions. Doing this filtered out ~20,000 entries of the 378,654 entries
 
-![](Deliverable1_Leo_files/figure-markdown_github/plotting-1.png)
+``` r
+KSDataFiltered2 <- KSData2018 %>% mutate(prop_raised_goal = usd_pledged_real/usd_goal_real) %>% filter(prop_raised_goal < 2)
+#KSDataFiltered2
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+ggplot(KSDataFiltered2) + geom_boxplot(aes(x = main_category, y = prop_raised_goal)) + theme(axis.text.x = element_text(size = 10, angle = 45, hjust = 1)) +
+  labs(title = "Propotion of Raised to Goal by Category", x = "Main Category", y = "Proportion of Raised to Goal")
+```
+
+![](Deliverable1_Leo_files/figure-markdown_github/transformations2-1.png)
